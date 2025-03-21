@@ -1,18 +1,21 @@
 ﻿using ExpectedObjects;
+using ExpectedObjects.Strategies;
 using Solution1.DominioTest._Util;
+using TestSolution.DominioTest.Builders;
 using Xunit.Abstractions;
 
 
-namespace Solution1.DominioTest.Courses
+namespace Solution1.DominioTest.Courses     
 {
 
-    public class TestCourse
+    public class TestCourse : IDisposable
     {
         private readonly ITestOutputHelper _output;
         private string _name;
         private float _workload;
         private TargetAudience _TargetAudience;
         private float _value;
+        private string _description;
 
         public TestCourse(ITestOutputHelper output)
         {
@@ -22,73 +25,73 @@ namespace Solution1.DominioTest.Courses
 
             _name = "Informatic";
             _workload = (float)80;
-            _TargetAudience = TargetAudience.Estudante;
+            _TargetAudience = TargetAudience.Student;
             _value = (float)250;
+            _description = "Description";
 
         }
-
+        public void Dispose()
+        {
+            _output.WriteLine("Dispose beeing executed");
+        }
 
         [Fact]
         //Setup of the test
         public void MustCreateCourse()
         {
-            var CourseEsperado = new
+            var expectedCourse = new
             {
-                name = "Informatic",
-                workload = (float)80,
-                TargetAudience = TargetAudience.Estudante,
-                value = 250
+                name = _name,
+                workload = _workload,
+                targetaudience = _TargetAudience,
+                value = _value,
+                description = _description
             };
 
-            var Course = new Course(CourseEsperado.name, CourseEsperado.workload,
-                CourseEsperado.TargetAudience, CourseEsperado.value) { };
+            var Course = new Course(expectedCourse.name, expectedCourse.workload,
+                expectedCourse.targetaudience, expectedCourse.value, expectedCourse.description);
 
 
-            CourseEsperado.ToExpectedObject().ShouldMatch(Course);
+            expectedCourse.ToExpectedObject().ShouldMatch(Course);
 
         }
 
         [Theory]
         [InlineData("")]
         [InlineData(null)]
-        public void CoursesMustNotHaveAnInvalidName(string nameInvalido)
+        public void CoursesMustNotHaveAnInvalidName(string invalidName)
         {
 
             //The Message here tests whether the exception that came is the exception that we defined below,
             // to see if the error it gave is really the error that we are testing in the method and not another one.
-            Assert.Throws<ArgumentException>(() => new Course(nameInvalido, _workload,
-                _TargetAudience, _value)).WithMessage("Invalid name");
+            Assert.Throws<ArgumentException>(() => CourseBuilder.New().WithName(invalidName).Build());
         }
 
         [Theory]
         [InlineData(0)]
         [InlineData(-1)]
         [InlineData(-100)]
-        public void MustNotHaveWorkloadLessThanOne(float workload)
+        public void MustNotHaveWorkloadLessThanOne(float invalidWorkload)
         {
-          Assert.Throws<ArgumentException>(() => new Course(_name, workload,
-                _TargetAudience, _value)).WithMessage("Invalid workload");
+          Assert.Throws<ArgumentException>(() => CourseBuilder.New().WithWorkload(invalidWorkload).Build());
         }
 
 
         [Theory]
         [InlineData(-1)]
-        public void MustNotHaveAValueLessThanOne(float value)
+        public void MustNotHaveAValueLessThanOne(float invalidValue)
         {
            
-           Assert.Throws<ArgumentException>(() => new Course(_name, _workload,
-                _TargetAudience, value)).WithMessage("Invalid value");
+           Assert.Throws<ArgumentException>(() => CourseBuilder.New().WithWorkload(invalidValue).Build());
            
         }
 
-
-
         public enum TargetAudience
         {
-            Estudante,
-            Universitario,
-            Empregado,
-            Empreendedor
+            Student,
+            CollegeStudent,
+            Employee,
+            Entrepreneur
         }
 
 
@@ -98,8 +101,9 @@ namespace Solution1.DominioTest.Courses
             public float workload { get; private set; }
             public TargetAudience TargetAudience { get; private set; }
             public float value { get; private set; }
+            public string description { get; private set; }
 
-            public Course(string name, float workload, TargetAudience TargetAudience, float value)
+            public Course(string name, float workload, TargetAudience TargetAudience, float value, string description)
             {
                 if (string.IsNullOrEmpty(name))
                 {
@@ -123,6 +127,7 @@ namespace Solution1.DominioTest.Courses
                 this.workload = workload;
                 this.TargetAudience = TargetAudience;
                 this.value = value;
+                this.description = description;
             }
         }
     }
