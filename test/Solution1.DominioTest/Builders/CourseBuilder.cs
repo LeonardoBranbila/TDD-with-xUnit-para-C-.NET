@@ -1,4 +1,5 @@
-﻿using static Solution1.DominioTest.Courses.TestCourse;
+﻿using static Solution1.Dominio.Courses.TestCourse;
+
 
 namespace TestSolution.DominioTest.Builders
 {

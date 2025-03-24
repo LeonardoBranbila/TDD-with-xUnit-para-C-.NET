@@ -10,11 +10,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Bogus" Version="22.0.2" />
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
     <PackageReference Include="ExpectedObjects" Version="3.5.4" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="xunit" Version="2.5.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Solution1.Dominio\TestSolution.Dominio.csproj" />
   </ItemGroup>
 
   <ItemGroup>

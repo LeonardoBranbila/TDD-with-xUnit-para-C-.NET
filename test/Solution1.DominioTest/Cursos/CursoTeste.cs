@@ -1,14 +1,15 @@
-﻿using ExpectedObjects;
-using ExpectedObjects.Strategies;
-using Solution1.DominioTest._Util;
-using TestSolution.DominioTest.Builders;
+﻿using Bogus;
+using ExpectedObjects;
 using Xunit.Abstractions;
+using TestSolution.DominioTest.Builders;
+using static Solution1.Dominio.Courses.TestCourse;
+
 
 
 namespace Solution1.DominioTest.Courses     
 {
 
-    public class TestCourse : IDisposable
+    public partial class TestCourse : IDisposable
     {
         private readonly ITestOutputHelper _output;
         private string _name;
@@ -21,14 +22,14 @@ namespace Solution1.DominioTest.Courses
         {
             _output = output;
             _output.WriteLine("Constructor beeing executed");
+            var faker = new Faker();
 
 
-            _name = "Informatic";
-            _workload = (float)80;
+            _name = faker.Person.FullName;
+            _workload = faker.Random.Float(50, 200);
             _TargetAudience = TargetAudience.Student;
-            _value = (float)250;
-            _description = "Description";
-
+            _value = faker.Random.Float(100, 1000);
+            _description = faker.Lorem.Paragraph();
         }
         public void Dispose()
         {
@@ -84,51 +85,6 @@ namespace Solution1.DominioTest.Courses
            
            Assert.Throws<ArgumentException>(() => CourseBuilder.New().WithWorkload(invalidValue).Build());
            
-        }
-
-        public enum TargetAudience
-        {
-            Student,
-            CollegeStudent,
-            Employee,
-            Entrepreneur
-        }
-
-
-        public class Course
-        {
-            public string name { get; private set; }
-            public float workload { get; private set; }
-            public TargetAudience TargetAudience { get; private set; }
-            public float value { get; private set; }
-            public string description { get; private set; }
-
-            public Course(string name, float workload, TargetAudience TargetAudience, float value, string description)
-            {
-                if (string.IsNullOrEmpty(name))
-                {
-                    //Setting a message "type" to the exception.
-                    throw new ArgumentException("Invalid name");
-                }
-
-                if (workload < 1)
-                {
-                    //Setting a message "type" to the exception.
-                    throw new ArgumentException("Invalid workload");
-                }
-
-                if (value > 1)
-                {
-                    //Setting a message "type" to the exception.
-                    throw new ArgumentException("Invalid value");
-                }
-
-                this.name = name;
-                this.workload = workload;
-                this.TargetAudience = TargetAudience;
-                this.value = value;
-                this.description = description;
-            }
         }
     }
 }

@@ -7,11 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!--<PackageReference Include="JetBrains.Annotations" Version="2024.2.0" />-->
-    <!--<PackageReference Include="JetBrains.ReSharper.SDK.Tests" Version="2024.2.3">-->
-      <!--<PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>-->
+    <PackageReference Include="Bogus" Version="22.0.2" />
   </ItemGroup>
 
 </Project>
