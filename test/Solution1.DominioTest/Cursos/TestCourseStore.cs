@@ -13,16 +13,16 @@ namespace TestSolution.DominioTest.Cursos
             var courseDTO = new CourseDTO
             {
                 name = "Course A",
-                workload = "Description",
+                workload = (float)850.00,
                 TargetAudience = 80,
                 value = 1,
-                description = 850.00
+                description = "Description"
 
             };
 
             var courseRepositoryMock = new Mock<ICourseRepository>();
 
-            var testCourseStore = new CourseStore(courseRepositoryMock.Object);
+            var CourseStore = new CourseStore(courseRepositoryMock.Object);
             CourseStore.Add(courseDTO);
 
             courseRepositoryMock.Verify(r => r.add(It.IsAny<Course>()));
@@ -40,30 +40,30 @@ namespace TestSolution.DominioTest.Cursos
 
     public class CourseStore
     {
-        private ICourseRepository @object;
+        private readonly ICourseRepository _RepositoryCourse;
 
-        public CourseStore(ICourseRepository @object)
+        public CourseStore(ICourseRepository RepositoryCourse)
         {
-            this.@object = @object;
+            this._RepositoryCourse = RepositoryCourse;
         }
 
-        void StoreCourse(ICourseRepository courseRepository)
-        {
-            throw new NotImplementedException();
-        }
 
-        internal static void Add(CourseDTO courseDTO)
+        internal void Add(CourseDTO courseDTO)
         {
-            throw new NotImplementedException();
+            var course = 
+                new Course(courseDTO.name, courseDTO.workload, TargetAudience.Student, 
+                courseDTO.value, courseDTO.description);
+
+            _RepositoryCourse.add(course);
         }
     }
 
     internal class CourseDTO
     {
         public string name { get; set; }
-        public string workload { get; set; }
+        public float workload { get; set; }
         public int TargetAudience { get; set; }
         public int value { get; set; }
-        public double description { get; set; }
+        public string description { get; set; }
     }
 }
